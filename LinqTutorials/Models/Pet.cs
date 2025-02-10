@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LinqTutorials.Models
 {
-    public class Pet
+    public class Pet : IComparable<Pet> //comparable due to Min or Max
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,6 +19,11 @@ namespace LinqTutorials.Models
             this.Name = name;
             this.PetType = petType;
             this.weight = weight;
+        }
+
+        public int CompareTo(Pet? other)
+        {
+           return weight.CompareTo(other.weight);
         }
     }
 }

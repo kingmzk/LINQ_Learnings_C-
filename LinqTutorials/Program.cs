@@ -1,4 +1,5 @@
-﻿using LinqTutorials.Models;
+﻿using LinqTutorials.Comparator;
+using LinqTutorials.Models;
 
 namespace LinqTutorials
 {
@@ -53,11 +54,17 @@ namespace LinqTutorials
             }
             return false;
         }
-
         //TODO implement this method
         public static bool AreAllNamesValid_Refactored(string[] names)
         {
             return !names.Any(x => char.IsLower(x[0]) || x.Length < 2 || x.Length > 25);
+        }
+
+        public static bool AreAllWordsOfTheSameLength_Refactored(List<string> words)
+        {
+            //if(words != null && words.Count > 0) { return true; }
+            var firstWordLength =   words[0].Length;
+            return words.All(x => x.Length == firstWordLength);
         }
 
         static void Main(string[] args)
@@ -183,42 +190,130 @@ namespace LinqTutorials
                 new Pet(5,"Rex", PetType.Dog, 40f),
                 new Pet(6,"Lucky", PetType.Dog, 5f),
                 new Pet(7,"storm", PetType.Cat, 0.9f),
-                new Pet(8,"neon", PetType.Cat, 2.2f)
+                new Pet(8,"neon", PetType.Cat, 2.2f),
+                new Pet(9,"neon", PetType.Cat, 2.2f)
             };
 
-            //Any Method
+
+
+
+            //Any Method  (The Any method in LINQ is used to determine if any elements in a sequence exist or satisfy a specified condition. It is part of the System.Linq namespace and has two overloads)
             var isAnyPetNameBruce = pets.Any(x => x.Name == "Bruce");
-            Console.WriteLine(nameof(isAnyPetNameBruce) + " : " + isAnyPetNameBruce);
+            Console.WriteLine(nameof(isAnyPetNameBruce) + " : " + isAnyPetNameBruce); //false
 
             var isAnyFish = pets.Any(x => x.PetType == PetType.Fish);
-            Console.WriteLine(nameof(isAnyFish) + " : " + isAnyFish);
+            Console.WriteLine(nameof(isAnyFish) + " : " + isAnyFish);  //true
 
             var specificPet = pets.Any(x => x.Name.Length > 5);
-            Printer(specificPet, nameof(specificPet));
+            Printer(specificPet, nameof(specificPet)); //true
 
 
-            //All Method
+
+
+            //All Method (The All method in LINQ is used to determine if all elements in a sequence satisfy a specified condition.)
             var isNameEmpty = pets.All(x => !string.IsNullOrEmpty(x.Name));
-            Console.WriteLine(nameof(isNameEmpty) + " : " + isNameEmpty);
+            Console.WriteLine(nameof(isNameEmpty) + " : " + isNameEmpty); //true
 
             var isNamesEmpty = !pets.All(x => x.Name.Length == 0);
-            Console.WriteLine(nameof(isNamesEmpty) + " : " + isNamesEmpty);
+            Console.WriteLine(nameof(isNamesEmpty) + " : " + isNamesEmpty); //true
 
             var areAllCats = pets.All(x => x.PetType == PetType.Cat);
-            Printer(areAllCats, nameof(areAllCats));
+            Printer(areAllCats, nameof(areAllCats)); //false
 
             var isCatHasWeight = pets.All(x => x.PetType == PetType.Cat && x.weight > 1);
-            Printer(isCatHasWeight, nameof(isCatHasWeight));
+            Printer(isCatHasWeight, nameof(isCatHasWeight)); //false
 
             bool ans1 = AreAllNamesValid_Refactored(words);
-            Printer(ans1, nameof(ans1));
+            Printer(ans1, nameof(ans1)); //false
 
-            var petTypeFirst = pets.FirstOrDefault().PetType;
+            var petTypeFirst = pets.FirstOrDefault()?.PetType;
             List<Pet> PetTypeAns = pets.Where(x => x.PetType == petTypeFirst).ToList();
             Console.WriteLine(string.Join(" ", PetTypeAns));
 
+            List<string> words1 = new List<string> { "test", "code", "abcd" };
+            List<string> words2 = new List<string> { "hello", "world" };
+            List<string> words3 = new List<string> { "same", "size", "four" };
+
+            Console.WriteLine(AreAllWordsOfTheSameLength_Refactored(words1)); // True
+            Console.WriteLine(AreAllWordsOfTheSameLength_Refactored(words2)); // True
+            Console.WriteLine(AreAllWordsOfTheSameLength_Refactored(words3)); // True
+
+
+
+
+            //Count (The Count method in LINQ is used to determine the number of elements in a sequence.)
+            var CountCat = pets.Count(x => x.PetType == PetType.Cat);
+            Console.WriteLine(nameof(CountCat) + " : " + CountCat);
+
+            var PetName = pets.Count(x => x.Name == "Neon" || x.Name == "Rex");
+            Console.WriteLine(nameof(PetName) + " : " + PetName);
+
+            var PetWeight = pets.Count(x => x.weight > 10 && x.PetType == PetType.Dog);
+            Console.WriteLine(nameof(PetWeight) + " : " + PetWeight);
+
+            var CountAllPet = pets.Count();
+            Console.WriteLine(nameof(CountAllPet) + " : " + CountAllPet);
+
+
+
+
+
+            //Contains (The Contains method in LINQ is used to determine if a sequence contains a specific element.)
+            var containsBruce = pets.Contains(pets.FirstOrDefault(x => x.Name == "Bruce"));
+            Console.WriteLine(nameof(containsBruce) + " : " + containsBruce);
+
+            var cats = new List<string> { "Cat", "lion", "tiger", "leopard", "jagaur" }; 
+
+            var containsCat = cats.Contains("Cat");
+            Console.WriteLine(nameof(containsCat) + " : " + containsCat);
+
+            bool isPresentHannibal = pets.Contains(new Pet(1, "Hannibal", PetType.Fish, 1.1f)); //it created new object which is not the same object anymore
+            Console.WriteLine(nameof(isPresentHannibal) + " : " + isPresentHannibal);
+
+            //custom comparator
+            bool isPresentHannibalCustomComparator = pets.Contains(new Pet(1, "Hannibal", PetType.Fish, 1.1f), new PetComparatorById()); //it created new object which is not the same object anymore
+            Console.WriteLine(nameof(isPresentHannibalCustomComparator) + " : " + isPresentHannibalCustomComparator);
+
+            var firstPetList = pets[0];
+            var isPresentFirstPet = pets.Contains(firstPetList);
+            Console.WriteLine(nameof(isPresentFirstPet) + " : " + isPresentFirstPet);
+
+
+
+
+
+            //OrderBy (The OrderBy method in LINQ is used to sort a sequence of elements based on a specified key.)
+            var orderByPetName = pets.OrderBy(x => x.Name);
+            foreach (var pet in orderByPetName) Console.WriteLine(pet.Name);
+
+            var orderByPetWeight = pets.OrderByDescending(x => x.weight);
+            foreach (var pet in orderByPetWeight) Console.WriteLine(pet.weight);
+
+            //thenBy after Orderby
+            var thenByPetType = pets.OrderBy(x => x.PetType).ThenBy(y => y.Name);
+            foreach (var pet in thenByPetType) Console.WriteLine(pet.Name + " " + pet.PetType);
+
+            var CustomComparatorOrderBy = pets.OrderBy(x => x, new PetByTypeComparer());
+            foreach (var pet in CustomComparatorOrderBy) Console.WriteLine(pet.Name + " " + pet.PetType);
+
+            //reverse
+            var reverseOrderByPetName = pets.OrderBy(x => x.Name).Reverse();
+            foreach (var pet in reverseOrderByPetName) Console.WriteLine(pet.Name);
+
+
+
+
+            //MinMax (The Min and Max methods in LINQ are used to determine the minimum and maximum values in a sequence.)
+            var minPets = pets.Min(x => x.weight);
+            Console.WriteLine(minPets);
+
+            var maxPets = pets.Max(x => x.weight);
+            Console.WriteLine(maxPets);
+
+            var minComparablePet = pets.Min(); //obj if comparable
+            Console.WriteLine(minComparablePet);
+
         }
-    
     }
 }
 
