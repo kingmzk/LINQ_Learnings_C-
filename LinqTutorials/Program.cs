@@ -1,5 +1,6 @@
 ﻿using LinqTutorials.Comparator;
 using LinqTutorials.Models;
+using System.Linq;
 
 namespace LinqTutorials
 {
@@ -312,6 +313,167 @@ namespace LinqTutorials
 
             var minComparablePet = pets.Min(); //obj if comparable
             Console.WriteLine(minComparablePet);
+
+
+
+
+
+            //Average (The Average method in LINQ is used to calculate the average value of a sequence of elements.)
+            var Numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var averagePets = pets.Average(x => x.weight);
+            Console.WriteLine(averagePets);
+
+            var average = Numbers.Average();
+            Console.WriteLine(average);
+
+
+
+
+            //Sum (The Sum method in LINQ is used to calculate the sum of a sequence of elements.)
+            var sumPets = pets.Sum(x => x.weight);
+            Console.WriteLine(sumPets);
+
+            var sum = Numbers.Sum();
+            Console.WriteLine(sum);
+
+
+
+
+            //ElementAt (The ElementAt method in LINQ is used to retrieve a specific element from a sequence.)
+            var firstPet = pets.ElementAt(0);
+            Console.WriteLine(firstPet.Name);
+
+            IEnumerable<int> IenumerableNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var elementAtIndex1 = IenumerableNumbers.ElementAt(1);
+            Console.WriteLine($"{elementAtIndex1} is element At Index 1");
+
+            //var nonExistElement = IenumerableNumbers.ElementAt(100); //throws exception
+
+            var nonExistElementDefault = IenumerableNumbers.ElementAtOrDefault(100); //returns default value
+            Console.WriteLine($"{nonExistElementDefault} is element At Index 100");
+
+
+
+
+
+            //First || Last (The First and Last methods in LINQ are used to retrieve the first or last element from a sequence.)
+            var firstPetFirst = pets.First();
+            Console.WriteLine(firstPetFirst.Name);
+
+            var PetLast = pets.Last();
+            Console.WriteLine(PetLast.Name);
+
+            var firstNumber = IenumerableNumbers.First();
+            Console.WriteLine($"{firstNumber} is first number");
+
+            var firstNumberDefault = IenumerableNumbers.FirstOrDefault();
+            Console.WriteLine($"{firstNumberDefault} is first number Or Default");
+
+            var lastNumberDefault = IenumerableNumbers.Last();
+            Console.WriteLine($"{lastNumberDefault} is last number Or Default");
+
+            var heaviestPet = pets.OrderByDescending(x => x.weight).FirstOrDefault();
+            Console.WriteLine($"{heaviestPet.Name} is heaviest pet");
+
+
+
+
+
+            //Single 0r SingleOrDefault (The Single and SingleOrDefault methods in LINQ are used to retrieve a single element from a sequence.)
+
+            //var singleElement = IenumerableNumbers.Single(); //throws exception
+            //var singleElementDefault = IenumerableNumbers.SingleOrDefault(); //returns default value
+
+            var singlePet = pets.Single(x => x.Id == 1);
+            Console.WriteLine($"{singlePet.Name} is single pet");
+
+            var singlePetDefault = pets.SingleOrDefault(x => x.Id == 100);
+            Console.WriteLine($"{singlePetDefault} is single pet Or Default");
+
+
+
+
+
+            //Where (The Where method in LINQ is used to filter a sequence of elements based on a predicate.)
+            var catss = pets.Where(x => x.PetType == PetType.Cat);
+            foreach (var pet in catss) Console.WriteLine($"{pet.Name} is cat");
+
+            var Catss1AndWeightMoreThen1 = pets.Where(x => x.PetType == PetType.Cat && x.weight > 1);
+            foreach (var pet in Catss1AndWeightMoreThen1) Console.WriteLine($"{pet.Name} is cat and Weight more then 1");
+
+            var evenNumberss = IenumerableNumbers.Where(x => x % 2 == 0);
+            foreach (var numberss in evenNumberss) Console.WriteLine($"{numberss} is even number");
+
+
+            //select (The Select method in LINQ is used to transform a sequence of elements into a new sequence of elements.)
+            var namess = pets.Select(x => x.Name);
+            foreach (var nam in namess) Console.WriteLine($"{nam} is name");   
+
+            var cats2 = pets.Where(x => x.PetType == PetType.Cat).Select(x => x.Name);
+            foreach (var pet2 in cats2) Console.WriteLine($"{pet2} is cat");
+
+            //contains with where (The Contains method in LINQ is used to check if a sequence contains a specific element.)
+            var containsCats = pets.Contains(pets.Where(x => x.PetType == PetType.Cat).FirstOrDefault());
+            Console.WriteLine($"{containsCats} is contains cat");
+
+            var cat3 = pets.Where(x => x.Name.Contains("a"));
+            foreach (var pet3 in cat3) Console.WriteLine($"{pet3.Name} is cat");  
+
+
+
+
+
+            // Take  (The Take method in LINQ is used to take a specific number of elements from a sequence.)
+            var first3Numbers = numbers.Take(3);
+            foreach (var num in first3Numbers) Console.WriteLine($"{num} is first 3 numbers");
+
+            var last3Numbers = numbers.TakeLast(3);
+            foreach (var num in last3Numbers) Console.WriteLine($"{num} is last 3 numbers");
+
+            var threeHeaviestPets = pets.OrderBy(x => x.weight).TakeLast(3);
+            foreach (var pet in threeHeaviestPets) Console.WriteLine($"{pet.Name} is heaviest pet of weight {pet.weight}");
+
+            var secondLargestNumber = numbers.OrderBy(x => x).TakeLast(2).First();
+            Console.WriteLine($"{secondLargestNumber} is second largest number");
+
+            var secondLargestSKipNumber = numbers.OrderByDescending(x => x).Skip(1).First();
+            Console.WriteLine ($"{secondLargestSKipNumber} is second largest number");
+
+            var sixtyPercentOfPets = pets.Take((int) (pets.Count() * 0.6));
+            foreach (var pet in sixtyPercentOfPets) Console.WriteLine($"{pet.Name} is 60% of pets");
+
+            //Take While commonly used with Ordered collection
+            var ArrayNum = new int[] { 1, 2, 3, 5, 10, 150, 200, 99, 15, 12 };
+            var numLessThen20 = ArrayNum.TakeWhile(x => x < 20);
+            foreach (var n in numLessThen20) Console.WriteLine($"{n} is less then 20");
+
+            var PetSWeightLessThen20 = pets.TakeWhile(x => x.weight < 20);
+            foreach (var pet in PetSWeightLessThen20) Console.WriteLine($"{pet.Name} is weight less then 20");
+
+
+
+
+            //Skip (The Skip method in LINQ is used to skip a specific number of elements from a sequence.)
+            var skip3Numbers = numbers.Skip(3);
+            foreach (var num in skip3Numbers) Console.WriteLine($"{num} is skip 3 numbers");
+
+            var skipLast3Numbers = numbers.SkipLast(3);
+            foreach (var num in skipLast3Numbers) Console.WriteLine($"{num} is skip last 3 numbers");
+
+            var usingTake = numbers.Take(numbers.Count() - 3);
+            foreach (var num in usingTake) Console.WriteLine($"{num} is using take");
+
+            var halfSkipFromStart = numbers.Skip(numbers.Count() / 2);
+            foreach (var num in halfSkipFromStart) Console.WriteLine($"{num} is half skip from start");
+
+            var secondPageOfPets = pets.Skip(2).Take(2);
+            foreach (var pet in secondPageOfPets) Console.WriteLine($"{pet.Name} is second page of pets");
+
+            var skipWhile = ArrayNum.SkipWhile(x => x < 20);
+            foreach (var num in skipWhile) Console.WriteLine($"{num} is skip while");
+
+            var skipWhileHeavireThen30 = pets.SkipWhile(x => x.weight < 20);
+            foreach (var pet in skipWhileHeavireThen30) Console.WriteLine($"{pet.Name} is skip while heavire then 20");
 
         }
     }
