@@ -1,4 +1,5 @@
-﻿using LinqTutorials.Comparator;
+﻿/*
+using LinqTutorials.Comparator;
 using LinqTutorials.Models;
 using System.Linq;
 
@@ -15,6 +16,7 @@ namespace LinqTutorials
 
     public class Program
     {
+        
         public static void Printer(bool value, string name)
         {
             Console.WriteLine($"{name} is {value}");
@@ -475,10 +477,13 @@ namespace LinqTutorials
             var skipWhileHeavireThen30 = pets.SkipWhile(x => x.weight < 20);
             foreach (var pet in skipWhileHeavireThen30) Console.WriteLine($"{pet.Name} is skip while heavire then 20");
 
+            //Programme1.mains(args);
+            Programme1.Run();
+
         }
     }
 }
-
+/*
 
 
 
